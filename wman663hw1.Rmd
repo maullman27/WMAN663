@@ -1,0 +1,85 @@
+---
+title: "Untitled"
+author: "MacKenzie Ullman"
+date: "2/9/2021"
+output: pdf_document
+---
+
+Import the “beach.csv” dataset into R and examine the first few rows of data
+```{r}
+setwd("F:/Quant Eco")
+getwd()
+beach <- read.csv(file='beach.csv')
+head(beach)
+
+```
+
+Fit a model that includes interactions between Year and BeachID. Report estimates of all coefficients
+```{r}
+fit_i <- lm(OpenBeach ~ BeachID * Year, data = beach)
+fit_i
+
+```
+
+Predict the beach area at all three beaches in 1992 
+```{r}
+betas <- coef(fit_i)
+betas
+pred1 <- data.frame(BeachID=c('A'), Year=c(1992))
+predict(fit_i, newdata = pred1)
+```
+The predicted beach area for beach A in 1992 is 362.815 hectares.
+
+```{r}
+pred2 <- data.frame(BeachID=c('B'), Year=c(1992))
+predict(fit_i, newdata = pred2)
+```
+The predicted beach area for beach B in 1992 is 100.034 hectares.
+
+```{r}
+pred3 <- data.frame(BeachID=c('C'), Year=c(1992))
+predict(fit_i, newdata = pred3)
+```
+The predicted beach area for beach C in 1992 is 214.3744 hectares.
+
+
+Plot the predicted area of each beach across all years 
+```{r}
+x <- 1992:2014
+b_0 <- 36945.72537
+b_b1 <- -34211.97897
+b_b2 <- -28776.11491
+b_b3<- -18.36491
+b_b4 <- 17.04277
+b_b5<- 14.37132
+y_ba <- b_0 + b_b3*x 
+y_ba
+y_bb <- b_0 + b_b1*1 + b_b3*x + b_b4*x
+y_bb
+y_bc <-b_0 + b_b2*1 + b_b3*x + b_b5*x 
+y_bc
+```
+```{r}
+betas
+```
+```{r}
+plot(x=x, y=y_ba, type= 'b', xlab= 'Year', ylab= 'Area', col='black')
+lines(x=x, y=y_bb, col='red')
+lines(x=x, y=y_bc, col='blue')
+```
+
+
+Interpret the rate of beach area change at each of the 3 beaches 
+```{r}
+ba<-b_b3
+ba
+bb<-b_b3+b_b4
+bb
+bc<-b_b3+b_b5
+bc
+
+```
+
+The rate of beach area change at beach A is a decrease by 18.36491 hectares per year.
+The rate of beach area change at beach B is a decrease of 1.32214 hectaeres per year.
+The rate of beach area change at beach C is a decrease of 3.99359 hectares per year. 
