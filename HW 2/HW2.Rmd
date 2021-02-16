@@ -1,0 +1,120 @@
+---
+title: "Homework 2"
+author: "MacKenzie Ullman"
+date: "2/15/2021"
+output: pdf_document
+---
+
+Calculate the residuals. Use the summary() function applied to your numeric vector of residuals to verify that this matches the Residuals: quantiles reported from the summary of your fitted model.
+Plot a histogram of your residuals. Do they appear reasonably Gaussian? 
+
+```{r}
+setwd("F:/Quant Eco")
+getwd()
+beach <- read.csv(file='beach.csv')
+fit_i <- lm(OpenBeach ~ BeachID * Year, data = beach)
+fit_i
+res <- residuals.lm(fit_i)
+res
+summary(res)
+
+```
+```{r}
+summary(fit_i)
+
+```
+```{r}
+plot(res, xlab= 'Fitted Value', ylab= 'Residual')
+abline(h=0, col='red')
+```
+
+```{r}
+hist(res)
+```
+
+
+The numeric vector of residuals matche the Residuals: quantiles reported from the summary of the fitted model.
+The residuals appear reasonably Gaussian.
+
+
+Calculate test statistics for your regression coefficients. Verify by comparing to test statistics reported from model output. 
+```{r}
+summary(fit_i)$coefficients
+```
+```{r}
+
+b_1 <- coef(fit_i)[2]
+s_b <- summary(fit_i)[['coefficients']]['BeachIDB', 'Std. Error']
+B_1 <- 0
+t1 <- (b_1 - B_1) / s_b
+t1
+
+b_2 <- coef(fit_i)[3]
+s_b1 <- summary(fit_i)[['coefficients']]['BeachIDC', 'Std. Error']
+B_2 <- 0
+t2 <- (b_2 - B_2) / s_b1
+t2
+
+b_3 <- coef(fit_i)[4]
+s_b2 <- summary(fit_i)[['coefficients']]['Year', 'Std. Error']
+B_3 <- 0
+t3 <- (b_3 - B_3) / s_b2
+t3
+
+b_4 <- coef(fit_i)[5]
+s_b3 <- summary(fit_i)[['coefficients']]['BeachIDB:Year', 'Std. Error']
+B_4 <- 0
+t4 <- (b_4 - B_4) / s_b3
+t4
+
+b_5 <- coef(fit_i)[6]
+s_b4 <- summary(fit_i)[['coefficients']]['BeachIDC:Year', 'Std. Error']
+B_5 <- 0
+t5 <- (b_5 - B_5) / s_b4
+t5
+```
+
+
+Calculate p-values for your regression coefficients. Verify by comparing to p-values reported from modeloutput. What are the associated null hypotheses? Do you reject or fail to reject these null hypotheses?
+
+```{r}
+p1<-pt(-1*abs(t1), df=56) + (1 - pt(abs(t1), df = 56))
+p1
+
+p2<-pt(-1*abs(t2), df=56) + (1 - pt(abs(t2), df = 56))
+p2
+
+p3<- 2*pt(-1*abs(t3), df=56) + (1 - pt(abs(t3), df = 56))
+p3
+
+p4<-pt(-1*abs(t4), df=56) + (1 - pt(abs(t4), df = 56))
+p4
+
+p5<-pt(-1*abs(t5), df=56) + (1 - pt(abs(t5), df = 56))
+p5
+```
+The null hypotheses associated with these p-values is that value of the slope coefficent(B_1,B_2,B_3,B_4,B_5) is equal to 0. Each p-value is less than 0.05 so we reject the null hypotheses. 
+
+Select a single regression coefficient (your choice) and devise a null hypothesis that is different from the default in lm(). Report the test statistics, your p-value, and whether you reject or fail to reject your null hypothesis. 
+
+H0:B_1=5
+HA:B_1 > 5
+```{r}
+ts_new <- (coef(fit_i)[2] - 5) /
+summary(fit_i)[['coefficients']]['BeachIDB', 'Std. Error']
+ts_new
+```
+```{r}
+pnew<-pt(-1*abs(ts_new), df=56) + (1 - pt(abs(ts_new), df = 56))
+pnew
+```
+
+
+The test statistic is -9.498374. The p-value is 2.853376e-13. We reject the null hypothesis. 
+
+Interpret output of your fitted model. Tell me how beach area does (or does not change) through time at each of the 3 beaches.
+```{r}
+summary(fit_i)
+```
+
+The F-statistic p-value is < 2.2e-16, which is highly significant.This means that, at least, one of the predictor variables is significantly related to the outcome variable.The predictor variables that are significant, according to the coefficients table, have t-statitic p-values less than 0.05 or have a ***. The beach area at beach A decreases by 18.36491 hectares per year. The beach area at beach B decreases by 1.32214 hectaeres per year. The beach area at beach C decreases by 3.99359 hectares per year. 
