@@ -1,0 +1,347 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Exam 1},
+  pdfauthor={MacKenzie Ullman},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Exam 1}
+\author{MacKenzie Ullman}
+\date{2/17/2021}
+
+\begin{document}
+\maketitle
+
+\#1 Import this dataset into R and inspect the first several rows of
+your data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"C:/Users/mau0005/Downloads"}\NormalTok{)}
+\KeywordTok{getwd}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "C:/Users/mau0005/Downloads"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Exam1<-}\KeywordTok{read.csv}\NormalTok{(}\DataTypeTok{file=}\StringTok{'Exam 1 Data.csv'}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(Exam1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            y          x1          x2 x3
+## 1 -1.2583929 -0.78501384 -0.43328324  b
+## 2  0.8453694 -1.64769643 -0.44504148  c
+## 3 -0.3548917 -0.23241743 -0.98055862  b
+## 4  0.1184083 -0.96179449 -1.43950151  c
+## 5  2.3361615  0.38517298  0.41564078  c
+## 6  0.9902994 -0.06704533 -0.05012007  b
+\end{verbatim}
+
+\#2 Fit a linear model that assumes your response is a function of x1,
+x2, and x3. Include an interaction between x1 and x2 only (i.e., do not
+include an interaction between your categorical variables and any other
+variables).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit<-}\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x1 }\OperatorTok{*}\StringTok{ }\NormalTok{x2 }\OperatorTok{+}\StringTok{ }\NormalTok{x3, }\DataTypeTok{data=}\NormalTok{ Exam1)}
+\NormalTok{fit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x1 * x2 + x3, data = Exam1)
+## 
+## Coefficients:
+## (Intercept)           x1           x2          x3b          x3c        x1:x2  
+##    0.701218     0.260469     0.283447    -1.627162     0.002504     0.149610
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x1 * x2 + x3, data = Exam1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.88266 -0.68069  0.04797  0.73887  2.27856 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  0.701218   0.183975   3.811 0.000247 ***
+## x1           0.260469   0.107963   2.413 0.017781 *  
+## x2           0.283447   0.109977   2.577 0.011512 *  
+## x3b         -1.627162   0.250457  -6.497 3.88e-09 ***
+## x3c          0.002504   0.268673   0.009 0.992584    
+## x1:x2        0.149610   0.089865   1.665 0.099279 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.044 on 94 degrees of freedom
+## Multiple R-squared:  0.4472, Adjusted R-squared:  0.4178 
+## F-statistic: 15.21 on 5 and 94 DF,  p-value: 6.249e-11
+\end{verbatim}
+
+\#3 Interpret the effect of variable x1 when x2 = -1
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(fit)}
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  (Intercept)           x1           x2          x3b          x3c        x1:x2 
+##  0.701217624  0.260468593  0.283447196 -1.627162195  0.002504032  0.149609715
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x2<-}\StringTok{ }\DecValTok{-1}
+\NormalTok{x1<-}\StringTok{ }\NormalTok{b[}\DecValTok{2}\NormalTok{] }\OperatorTok{+}\NormalTok{b[}\DecValTok{6}\NormalTok{]}\OperatorTok{*}\StringTok{ }\DecValTok{-1}
+\NormalTok{x1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        x1 
+## 0.1108589
+\end{verbatim}
+
+\#4 Interpret the effect of variable x1 when x2 = 1
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x2<-}\StringTok{ }\DecValTok{1}
+\NormalTok{x1<-}\StringTok{ }\NormalTok{b[}\DecValTok{2}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{b[}\DecValTok{6}\NormalTok{] }\OperatorTok{*}\StringTok{ }\DecValTok{1}
+\NormalTok{x1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        x1 
+## 0.4100783
+\end{verbatim}
+
+\#5 Interpret the effect of variable x3
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x3<-}\StringTok{ }\NormalTok{b[}\DecValTok{4}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{b[}\DecValTok{5}\NormalTok{]}
+\NormalTok{x3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       x3b 
+## -1.624658
+\end{verbatim}
+
+\#6 Describe how R codes the categorical variable x3. Demonstrate by
+reporting the first 5 values of variables derived from x3
+
+R creates k − 1 dummy variables, where k is the number of levels of
+categorical variables. So here, R would create 2 dummy variables. A is
+set aside as the reference, so there is a dummy variable associated with
+variable b that equals 1 if a factor level is b and equals 0 otherwise.
+Similarly, there is another variable c that equals 1 if a factor level
+is c and equals 0 otherwise.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cbind}\NormalTok{(Exam1}\OperatorTok{$}\NormalTok{x3[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{],}
+\KeywordTok{ifelse}\NormalTok{(Exam1}\OperatorTok{$}\NormalTok{x3 }\OperatorTok{==}\StringTok{ 'b'}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{],}
+\KeywordTok{ifelse}\NormalTok{(Exam1}\OperatorTok{$}\NormalTok{x3 }\OperatorTok{==}\StringTok{ 'c'}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3]
+## [1,] "b"  "1"  "0" 
+## [2,] "c"  "0"  "1" 
+## [3,] "b"  "1"  "0" 
+## [4,] "c"  "0"  "1" 
+## [5,] "c"  "0"  "1"
+\end{verbatim}
+
+\#7 Derive the test statistic and p-value associated with the
+interaction between x1 and x2. What is the null hypothesis assumed by
+the ``lm()'' function? Do we reject or fail to reject this null
+hypothesis? Defend your answer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# test stat}
+\NormalTok{ts <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(fit)[}\DecValTok{6}\NormalTok{]}\OperatorTok{/}\KeywordTok{summary}\NormalTok{(fit)[[}\StringTok{'coefficients'}\NormalTok{]][}\DecValTok{6}\NormalTok{, }\DecValTok{3}\NormalTok{]}
+\NormalTok{ts; }\KeywordTok{summary}\NormalTok{(fit)[[}\StringTok{'coefficients'}\NormalTok{]][}\DecValTok{6}\NormalTok{, }\DecValTok{4}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      x1:x2 
+## 0.08986547
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 0.09927881
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# pvalue}
+\KeywordTok{pt}\NormalTok{(ts, }\DataTypeTok{df =} \KeywordTok{nrow}\NormalTok{(Exam1) }\OperatorTok{-}\StringTok{ }\KeywordTok{length}\NormalTok{(}\KeywordTok{coef}\NormalTok{(fit))) }\OperatorTok{*}\StringTok{ }\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    x1:x2 
+## 1.071415
+\end{verbatim}
+
+The null hypothesis is that the slope coefficient associated with the
+interaction between x1 and x2 is 0. We do not reject the null hypothesis
+because the p-value is larger than any reasonable α.
+
+\#8 assume you have the following realizations of random variable Y :y =
+(3, 8, 7) Further assume realizations of the random variable Y are
+Gaussian distributed: y ∼ Gaussian(µ, σ2). Fix σ 2 = 1 and µ = 8, and
+evaluate the probability density at each of your 3 realizations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{7}\NormalTok{)}
+\KeywordTok{dnorm}\NormalTok{(y,}\DecValTok{8}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.486720e-06 3.989423e-01 2.419707e-01
+\end{verbatim}
+
+\#9 What is a type I error? What is a p-value? How are the two
+quantities related?
+
+Type 1 error is where you falsely reject a null hypothesis that is true.
+A p-value is the probability of observing a more extreme value of a test
+statistic under the assumptions of the null hypothesis. The two
+quantities are related because we use the p-value to conclude if we
+reject or accept a null hypothesis. Sometimes we might observe an
+extreme value of a test statistic by chance even when the null
+hypothesis is true. This would lead to type 1 error.
+
+\#10 What is a fundamental assumption we must make to derive inference
+about regression coefficients of a linear model?
+
+The parameters are linear.
+
+\end{document}

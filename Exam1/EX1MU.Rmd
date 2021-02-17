@@ -1,0 +1,84 @@
+---
+title: "Exam 1"
+author: "MacKenzie Ullman"
+date: "2/17/2021"
+output:
+  html_document:
+    df_print: paged
+---
+#1 Import this dataset into R and inspect the first several rows of your data
+
+```{r}
+setwd("C:/Users/mau0005/Downloads")
+getwd()
+Exam1<-read.csv(file='Exam 1 Data.csv')
+head(Exam1)
+```
+
+
+#2 Fit a linear model that assumes your response is a function of x1, x2, and x3. Include an interaction between x1 and x2 only (i.e., do not include an interaction between your categorical variables and any other variables).
+
+```{r}
+fit<-lm(y ~ x1 * x2 + x3, data= Exam1)
+fit
+summary(fit)
+```
+
+#3 Interpret the effect of variable x1 when x2 = -1
+```{r}
+b <- coef(fit)
+b
+```
+```{r}
+x2<- -1
+x1<- b[2] +b[6]* -1
+x1
+```
+
+#4 Interpret the effect of variable x1 when x2 = 1
+```{r}
+x2<- 1
+x1<- b[2] + b[6] * 1
+x1
+```
+
+#5 Interpret the effect of variable x3
+```{r}
+x3<- b[4] + b[5]
+x3
+```
+
+#6 Describe how R codes the categorical variable x3. Demonstrate by reporting the first 5 values of variables derived from x3
+
+R creates k − 1 dummy variables, where k is the number of levels of categorical variables. So here, R would create 2 dummy variables. A is set aside as the reference, so there is a dummy variable associated with variable b that equals 1 if a factor level is b and equals 0 otherwise. Similarly, there is another variable c that equals 1 if a factor level is c and equals 0 otherwise.
+```{r}
+cbind(Exam1$x3[1:5],
+ifelse(Exam1$x3 == 'b', 1, 0)[1:5],
+ifelse(Exam1$x3 == 'c', 1, 0)[1:5])
+```
+
+#7 Derive the test statistic and p-value associated with the interaction between x1 and x2. What is the null hypothesis assumed by the "lm()" function? Do we reject or fail to reject this null hypothesis? Defend your answer.
+```{r}
+# test stat
+ts <- coef(fit)[6]/summary(fit)[['coefficients']][6, 3]
+ts; summary(fit)[['coefficients']][6, 4]
+# pvalue
+pt(ts, df = nrow(Exam1) - length(coef(fit))) * 2
+```
+The null hypothesis is that the slope coefficient associated with the interaction between x1 and x2 is 0. We do not reject the null hypothesis
+because the p-value is larger than any reasonable α.
+
+#8 assume you have the following realizations of random variable Y :y = (3, 8, 7) Further assume realizations of the random variable Y are Gaussian distributed: y ∼ Gaussian(µ, σ2). Fix σ 2 = 1 and µ = 8, and evaluate the probability density at each of your 3 realizations.
+
+```{r}
+y <- c(3,8,7)
+dnorm(y,8,1)
+```
+
+#9 What is a type I error? What is a p-value? How are the two quantities related?
+
+Type 1 error is where you falsely reject a null hypothesis that is true. A p-value is the probability of observing a more extreme value of a test statistic under the assumptions of the null hypothesis. The two quantities are related because we use the p-value to conclude if we reject or accept a null hypothesis. Sometimes we might observe an extreme value of a test statistic by chance even when the null hypothesis is true. This would lead to type 1 error. 
+
+#10 What is a fundamental assumption we must make to derive inference about regression coefficients of a linear model?
+
+The parameters are linear. 
