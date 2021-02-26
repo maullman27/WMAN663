@@ -1,0 +1,19 @@
+---
+title: "Project Description"
+author: "MacKenzie Ullman"
+date: "2/26/2021"
+output: word_document
+---
+
+
+
+
+My study is to research and evaluate the paddlefish populations in the Ohio River in West Virginia. This study is a small stepping stone to the development of a long-term monitoring program for the West Virginia Division of Natural Resources.Furthermore it will help evaluate their restortion efforts put forth to reestablish paddlefish back into the waters of West Virginia. 
+
+To evaluate paddlefish population status, paddlefish have been captured using hobbled gill nets that sample the broadest distributuion size. This gathers a representative sample of the fishes currently in the Ohio River. All Paddlefish sampled were counted, checked for coded wire tags, weighed, and measured. All paddlefish were also jaw tagged to develop vital rates through mark-recapture analyses. In cases of mortality, which was minimal, jawbones have been removed for age analyses. However, not all ages have been determined at this time. 
+
+With this data, I believe I can answer questions about recruitment each year. Like how strong or weak each age class present is. I also believe I can determine mortality rates per year. Furthermore, with this data I can estimate growth to understand how paddlefish grow from year to year. 
+
+The potential predictor variables within my dataset include: length, weight, sex(not included with every individual) The potential response variables within my analyses would include: Alive/Dead, age, growth rate, and mortality rate. 
+
+Other variables I have collected but am not sure how to analyze or if they are useful include: pH, air temperature, water tempurature, conductivity, disssolved oxygen, soak time of nets. However some sites are lacking these variables due to equiptment failure. 
