@@ -1,0 +1,97 @@
+---
+title: "Homework 3"
+author: "MacKenzie Ullman"
+date: "3/2/2021"
+output: pdf_document
+---
+
+Fit a logistic regression model that assumes the probability of success is an additive function of variables
+x1 and x2.
+
+```{r}
+setwd("F:/Quant Eco")
+getwd()
+HW3 <- read.csv(file ='HW3.csv')
+head(HW3)
+summary(HW3)
+```
+
+```{r}
+fit <- glm( y~ x1+x2, family= binomial, data= HW3)
+summary(fit)
+```
+
+Interpret the effect of variable x1 on the log odds of success. Verify your interpretation in R.
+
+when x1 changes by 1 unit, the log odds of success change by -0.1679
+```{r}
+betas <- coef(fit)
+betas
+
+yx<- betas[1]+betas[2]*0
+yx
+
+yx1 <-betas[1]+betas[2]*1
+yx1
+
+yx1-yx
+```
+
+
+Interpret the effect of variable x2 on the log odds of success. Verify your interpretation in R.
+
+when the x2 variable changes by one unit, the log odds of success change by -0.9679
+```{r}
+betas <- coef(fit)
+betas
+
+yx2 <- betas[1] + betas[3]*0
+yx2
+
+yx21 <- betas [1] + betas[3]*1
+yx21
+
+yx21-yx2
+```
+
+
+Duplicate the Wald Test and p-values for variables x1 and x2 performed by the glm() function. Do you reject or fail to reject your null hypothesis?
+```{r}
+#wald test for x1
+betas[2] / summary(fit)[['coefficients']]['x1', 'Std. Error']
+summary(fit)[['coefficients']]['x1', 'z value']
+```
+
+```{r}
+#wald test for x2
+betas[3] / summary(fit)[['coefficients']]['x2b', 'Std. Error']
+summary(fit)[['coefficients']]['x2b', 'z value']
+```
+```{r}
+# p-values
+#test statistic for x1
+tsx1 <- betas[2] / summary(fit)[['coefficients']]['x2b', 'Std. Error']
+tsx1
+#test statistic for x2
+tsx2 <- betas[3] / summary(fit)[['coefficients']]['x2b', 'Std. Error']
+tsx2
+#p-value for x1
+2 * pnorm(-1 * abs(tsx1), mean = 0, sd = 1)
+#p-value for x2
+2 * pnorm(-1 * abs(tsx2), mean = 0, sd = 1)
+```
+
+We reject the null hypothesis for x1. We fail to reject the null hypothesis for x2. 
+
+Predict and plot the mean probability of success over the range of values of x1.
+```{r}
+plogis(yx2)
+
+x1 <- seq(from = min(HW3$x1), to = max(HW3$x1),length.out = 100)
+
+y <- betas[1] + betas[2] * x1 
+plot(x = x1, y = plogis(y), ylab = 'Probability of Success over Range of x1',
+xlab = 'x1', cex.axis = 1.5, cex.lab = 1.5, type = 'l')
+```
+
+
