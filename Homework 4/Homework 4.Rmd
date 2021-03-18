@@ -1,0 +1,137 @@
+---
+title: "Homework 4"
+author: "MacKenzie Ullman"
+date: "3/15/2021"
+output: pdf_document
+---
+
+```{r}
+setwd("F:/Quant Eco/")
+getwd()
+hw4 <- read.csv(file= 'Homework 4 Data.csv')
+head(hw4)
+summary(hw4)
+```
+
+Fit a Poisson regression model that assumes expected count is an interactive function of variables x1 and x2.
+```{r}
+fit <- glm( y ~ x1 * x2, family= poisson, data= hw4)
+summary(fit)
+```
+
+Interpret the effect of variable x1 on the expected count when x2 is fixed at level "b". Verify your interpretation in R.
+
+```{r}
+beta <- coef(fit)
+beta
+
+x2 <- 1
+c_1<- beta[2] + beta[4] * 1
+c_1
+```
+
+```{r}
+exp(c_1)
+
+# Lambda increases by 46% for every 1 unit increase in x1
+```
+```{r}
+#verify
+c_2 <- beta[2] + beta[4] * 2
+c_2
+
+exp(c_2)
+
+exp(c_2) / exp(c_1)
+exp(beta[4])
+
+```
+
+Interpret the effect of variable x2 on the expected count when x1 is fixed at 1. Verify your interpretation
+in R.
+```{r}
+beta
+x1 <- 1
+c_x2 <- beta[3] + beta[4] * 1
+c_x2
+```
+```{r}
+exp(c_x2)
+
+# Lambda increases by 56% for every 1 unit increase in x2
+```
+```{r}
+#verify
+c2_x2 <- beta[3] + beta[4] * 2
+c2_x2
+
+exp(c2_x2)
+
+exp(c2_x2)/ exp(c_x2)
+exp(beta[4])
+```
+
+
+Predict the expected count, ± 95% confidence intervals, over the observed range of values of x1, assuming x2 is fixed at level "b".
+
+```{r}
+# x1 range of values
+x1_new <- data.frame(
+  x1 = seq(min(hw4$x1), max(hw4$x1), length.out = 100),
+  x2 = factor(rep('b', times= 100), levels = c('a','b')))
+
+# predicted expected count
+prd <- predict.glm(object= fit, newdata = x1_new, type = 'link', se.fit = T)
+prd
+
+#confidence intervals
+low <- exp(prd$fit - qnorm(.975) * prd$se.fit)
+high <- exp (prd$fit + qnorm(.975) * prd$se.fit)
+
+# plot
+plot(y = exp(prd$fit), x = x1_new$x1, xlab = 'x1',
+ylab = 'Expected count', cex.axis = 1.5, cex.lab = 1.5,
+ylim = c(min(low), max(high)), type = 'l')
+lines(x = x1_new$x1, y = low, lty = 2)
+lines(x = x1_new$x1, y = high, lty = 2)
+```
+
+Predict the expected count, ± 95% confidence intervals, of levels "a" and "b", assuming x1 is fixed at it’s mean.
+```{r}
+
+x1_new2 <- data.frame(
+  x1a = mean(hw4$x1),
+  x2a = factor('a', levels = c('a','b')))
+# x1 is mean and x2 is b
+x1_new2b <- data.frame(
+  x1b = mean(hw4$x1), 
+  x2b = factor('b', levels = c('a','b')))
+
+
+# predicted expected count
+prd2a <- predict.glm(object= fit, newdata = x1_new2, type = 'link', se.fit = T)
+prd2a
+
+prd2b <- predict.glm(object= fit, newdata = x1_new2b, type = 'link', se.fit = T)
+prd2b
+#confidence intervals
+low <- exp(prd2a$fit - qnorm(.975) * prd2a$se.fit)
+high <- exp (prd2a$fit + qnorm(.975) * prd2a$se.fit)
+
+low <- exp(prd2b$fit - qnorm(.975) * prd2b$se.fit)
+high <- exp (prd2b$fit + qnorm(.975) * prd2b$se.fit)
+
+# plot
+plot(y = exp(prd2a$fit), x = x1_new2$x1, xlab = 'x1',
+ylab = 'Expected count', cex.axis = 1.5, cex.lab = 1.5,
+ylim = c(min(low), max(high)), type = 'l')
+lines(x = x1_new2$x1, y = low, lty = 2)
+lines(x = x1_new2$x1, y = high, lty = 2)
+
+plot(y = exp(prd2b$fit), x = x1_new2b$x1, xlab = 'x1',
+ylab = 'Expected count', cex.axis = 1.5, cex.lab = 1.5,
+ylim = c(min(low), max(high)), type = 'l')
+lines(x = x1_new2b$x1, y = low, lty = 2)
+lines(x = x1_new2b$x1, y = high, lty = 2
+```
+
