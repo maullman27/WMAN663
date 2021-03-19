@@ -6,8 +6,8 @@ output: pdf_document
 ---
 
 ```{r}
-setwd("F:/Quant Eco/")
-getwd()
+#setwd("F:/Quant Eco/")
+#getwd()
 hw4 <- read.csv(file= 'Homework 4 Data.csv')
 head(hw4)
 summary(hw4)
@@ -96,16 +96,17 @@ lines(x = x1_new$x1, y = low, lty = 2)
 lines(x = x1_new$x1, y = high, lty = 2)
 ```
 
-Predict the expected count, ± 95% confidence intervals, of levels "a" and "b", assuming x1 is fixed at it’s mean.
+Predict the expected count, $\pm$ 95% confidence intervals, of levels "a" and "b", assuming x1 is fixed at it’s mean.
 ```{r}
 
 x1_new2 <- data.frame(
-  x1a = mean(hw4$x1),
-  x2a = factor('a', levels = c('a','b')))
+  x1 = mean(hw4$x1),
+  x2 = factor('a', levels = c('a','b')))
 # x1 is mean and x2 is b
 x1_new2b <- data.frame(
-  x1b = mean(hw4$x1), 
-  x2b = factor('b', levels = c('a','b')))
+  x1 = mean(hw4$x1), 
+  x2 = factor('b', levels = c('a','b')))
+
 
 
 # predicted expected count
@@ -132,6 +133,6 @@ plot(y = exp(prd2b$fit), x = x1_new2b$x1, xlab = 'x1',
 ylab = 'Expected count', cex.axis = 1.5, cex.lab = 1.5,
 ylim = c(min(low), max(high)), type = 'l')
 lines(x = x1_new2b$x1, y = low, lty = 2)
-lines(x = x1_new2b$x1, y = high, lty = 2
+lines(x = x1_new2b$x1, y = high, lty = 2)
 ```
 
