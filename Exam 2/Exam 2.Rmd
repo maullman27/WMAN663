@@ -1,0 +1,101 @@
+---
+title: "Exam 2"
+author: "MacKenzie Ullman"
+date: "3/22/2021"
+output: pdf_document
+---
+
+Import this dataset into R and inspect the first several rows of your data
+```{r}
+setwd("C:/Users/mau0005/Downloads/")
+getwd()
+ex2 <- read.csv(file='Exam 2 Data.csv')
+head(ex2)
+```
+
+
+Fit a Poisson model that assumes your response is a function of x1, x2, and x3. Include an interaction between x1 and x2 only (i.e., do not include an interaction between your categorical variables and any other variables).
+
+```{r}
+fit <- glm(y ~ x1 * x2 + x3, family = poisson, data = ex2)
+summary(fit)
+```
+
+
+Interpret the effect of variable x1 when x2 = -1
+```{r}
+b <- coef(fit)
+b
+b[2] + b[6] * -1
+```
+The log proportional change associated with a one unit increase in x1 decreases by 0.746. 
+
+
+Plot expected counts ±90% confidence intervals over the observed range of variable x1. Assume variable when x2 = -1 and category "a".
+```{r}
+newdat <- data.frame(
+  x1 = seq(min(ex2$x1), max(ex2$x1), length.out = 100),
+  x2 = -1,
+  x3 = factor('a', levels = c('a', 'b', 'c'))
+)
+
+prd <- predict.glm(fit, newdat, se.fit = T)
+
+low <- plogis(prd$fit - qnorm(0.95) * prd$se.fit)
+high <- plogis(prd$fit + qnorm(0.95) * prd$se.fit)
+
+plot(x = newdat$x1, y = plogis(prd$fit), ylim = c(min(low), max(high)), type = 'l')
+lines(x = newdat$x1, y = low, lty = 2)
+lines(x = newdat$x1, y = high, lty = 2)
+```
+
+
+Interpret the effect of variable x3
+```{r}
+summary(fit)
+```
+The difference in log proportions between category b and a is 0.375. The difference in log odds between category c and a is -0.883.
+
+
+Use contrasts to evaluate the null hypothesis that the difference in log expected count between levels "b" and "c" = 0. Fix x1 and x2 at their means.
+```{r}
+library(multcomp)
+```
+```{r}
+m <- matrix(c(0, 0, 0, 1, 1, 0), nrow = 1)
+cnt <- glht(fit, m)
+summary(cnt, test = adjusted('none'))
+```
+we reject the null hypothesis because the p-value (0.004) is less than 0.05. Therefore the difference in log expected count between levels "b" and "c" is different than 0.
+
+
+Derive the test statistic and p-value associated with the interaction between x1 and x2. What is the null hypothesis? Do we reject or fail to reject this null hypothesis? Defend your answer.
+```{r}
+#test statistic
+s <- summary(fit)[['coefficients']][, 2]
+b[6] / s[6]
+
+# p-value
+pnorm(-1 * abs(b[6] / s[6])) * 2
+```
+The null hypothesis is that beta 5 is equal to zero. We reject this null hypothesis. Given the significantly small p-value of 1.976e-08, the effect of variable x1 depends on the level of  x2.
+
+
+assume you have the following realizations of random variable Y : y = (1, 0)
+Further assume realizations of the random variable Y are Bernoulli distributed: y ∼ Bernoulli(p).
+What is the probability of observing each of these random variables assuming the log odds of success = -2?
+```{r}
+plogis(-2)
+dbinom(0, size = 1, p = 0.12)
+```
+The probability of observing each of these random variable assuming the log odds o success is -2 is 0.88. 
+
+
+What is the "support" of a Bernoulli random variable? What are the acceptable values of it’s sole parameter? To which quantity do we apply a link function, and why do we do this? What is the principle link function we use in binomial (i.e., logistic) regression, and what it it’s inverse function?
+
+The support is that realizations of the random variable (y) are bounded between 0 and 1. The acceptable values for the probability of success are 0 or 1. 
+We apply a link function to a bounded quantity in order transform it to the real number line. The principal link function is the logit link function.The logit link maps a between 0 and 1 to a real number line. The inverse function of the logit link function is called the inverse link function (plogis()). The inverse logit link maps a number on a real number line to the 0, 1 interval. 
+
+
+What is a fundamental assumption we make to derive inference when comparing two levels of a categorical random variable?
+Normally distributed with a mean = 0 and the variance = 1.
