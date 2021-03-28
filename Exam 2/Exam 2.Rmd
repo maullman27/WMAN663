@@ -7,8 +7,8 @@ output: pdf_document
 
 Import this dataset into R and inspect the first several rows of your data
 ```{r}
-setwd("C:/Users/mau0005/Downloads/")
-getwd()
+#setwd("C:/Users/mau0005/Downloads/")
+#getwd()
 ex2 <- read.csv(file='Exam 2 Data.csv')
 head(ex2)
 ```
@@ -31,7 +31,7 @@ b[2] + b[6] * -1
 The log proportional change associated with a one unit increase in x1 decreases by 0.746. 
 
 
-Plot expected counts ±90% confidence intervals over the observed range of variable x1. Assume variable when x2 = -1 and category "a".
+Plot expected counts $\pm90$% confidence intervals over the observed range of variable x1. Assume variable when x2 = -1 and category "a".
 ```{r}
 newdat <- data.frame(
   x1 = seq(min(ex2$x1), max(ex2$x1), length.out = 100),
@@ -82,7 +82,7 @@ The null hypothesis is that beta 5 is equal to zero. We reject this null hypothe
 
 
 assume you have the following realizations of random variable Y : y = (1, 0)
-Further assume realizations of the random variable Y are Bernoulli distributed: y ∼ Bernoulli(p).
+Further assume realizations of the random variable Y are Bernoulli distributed: y ~ Bernoulli(p).
 What is the probability of observing each of these random variables assuming the log odds of success = -2?
 ```{r}
 plogis(-2)
