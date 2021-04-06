@@ -1,0 +1,98 @@
+---
+title: "Homework 5"
+author: "MacKenzie Ullman"
+date: "4/5/2021"
+output: pdf_document
+---
+1. Load data and place into an unmarkedFrameOccu object
+```{r}
+setwd("F:/Quant Eco/")
+getwd()
+y <- read.csv(file= 'Bobcat.csv')
+head(y)
+summary(y)
+```
+```{r}
+install.packages('unmarked')
+library(unmarked)
+```
+
+```{r}
+bobcat_mat <- as.matrix(y)
+occu_data <- unmarkedFrameOccu(y = bobcat_mat)
+occu_data
+```
+
+
+
+2. Fit an occupancy model that assumes conditional detection probability is a function of the number of people photographed at a site, and occupancy probability is a function of disturbance within 5km.
+
+
+```{r}
+p_covs <- read.csv('p covariates.csv')
+head(p_covs)
+
+class(p_covs)
+
+det_covs <- list(
+people = data.frame(p_covs[, c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71)])
+)
+
+occu_data <- unmarkedFrameOccu(y = bobcat_mat, obsCovs = det_covs)
+
+
+
+
+
+site_covs <- read.csv('psi covariates.csv')
+head(site_covs)
+
+class(site_covs)
+
+occu_data <- unmarkedFrameOccu(y = bobcat_mat, siteCovs = site_covs, obsCovs = det_covs)
+
+fit <- occu(formula = ~ people ~ Dist_5km , data = occu_data)
+summary(fit)
+```
+
+
+3. Interpret the effect of the number of people photographed at each site on conditional detection probability of bobcat. Verity your interpretation in R.
+
+For every one change in the number of people photographed, the log odds of detecting a bobcat at a camera decreases by 0.0608. 
+```{r}
+beta <- coef(fit)
+beta
+
+a <- beta[4] * 1
+a
+
+b <- beta[4] * 2
+b
+
+c <- b-a
+c
+```
+
+4. Re-create the Wald test for the effect of disturbance within 5km. What is the null hypothesis? Do you reject or fail to reject this null hypothesis?
+```{r}
+w <- -23.643839/4.7728768
+w
+
+2 * pnorm(-1 * abs(w))
+```
+We reject the null hypothesis
+
+
+5. Predict and plot the effect of disturbance within 5km on bobcat occupancy probability. Do this over the range of observed disturbance within 5km.
+
+```{r}
+new <- data.frame(disturbance = seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100))
+
+predict <- predict(object= fit, newdata = new, type = 'state')
+```
+
+```{r}
+x1 <- seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100)
+plot(y= predict(y), x= x1, ylab= 'Bobcat Occupancy Probability' , xlab= 'Disturbance Within 5km', type= 'l' )
+```
+
