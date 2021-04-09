@@ -1,0 +1,75 @@
+---
+title: "Project"
+author: "MacKenzie Ullman"
+date: "4/7/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r}
+setwd("F:/Quant Eco/")
+getwd()
+Paddle <- read.csv(file= 'PDF Counts.csv')
+head(Paddle)
+summary(Paddle)
+```
+
+```{r}
+# Count of pdf captured as a function of water temperature
+fit1 <- glm(Count ~ Temp, family = poisson, data = Paddle)
+summary(fit1)
+```
+```{r}
+# Count of pdf captured as a function of water conductivity
+fit2 <- glm(Count ~ Conductivity, family = poisson, data = Paddle)
+summary(fit2)
+
+```
+```{r}
+# Count of pdf captured as a function of dissolved oxygen 
+fit3 <- glm(Count ~ DO, family = poisson, data = Paddle)
+summary(fit3)
+```
+```{r}
+# Count of pdf captured as a function of pH
+fit4 <- glm(Count ~ pH, family = poisson, data = Paddle)
+summary(fit4)
+```
+
+```{r}
+# Count of pdf captured as a function of depth of set
+fit5 <- glm(Count ~ Depth, family = poisson, data = Paddle)
+summary(fit5)
+```
+
+```{r}
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
+AIC(fit4)
+AIC(fit5)
+```
+
+```{r}
+
+
+library(AICcmodavg)
+```
+
+```{r}
+cand.set <- list(
+P1 = fit1, P2 = fit2, P3 = fit3, P4 = fit4,
+P5 = fit5
+)
+mods <- aictab(cand.set = cand.set, second.ord = F)
+head(mods)
+```
+
+```{r}
+#top model
+summary(fit5)
+```
+
