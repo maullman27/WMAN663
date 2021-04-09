@@ -6,14 +6,14 @@ output: pdf_document
 ---
 1. Load data and place into an unmarkedFrameOccu object
 ```{r}
-setwd("F:/Quant Eco/")
-getwd()
+#setwd("F:/Quant Eco/")
+#getwd()
 y <- read.csv(file= 'Bobcat.csv')
 head(y)
 summary(y)
 ```
 ```{r}
-install.packages('unmarked')
+#install.packages('unmarked')
 library(unmarked)
 ```
 
@@ -86,13 +86,13 @@ We reject the null hypothesis
 5. Predict and plot the effect of disturbance within 5km on bobcat occupancy probability. Do this over the range of observed disturbance within 5km.
 
 ```{r}
-new <- data.frame(disturbance = seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100))
+#new <- data.frame(disturbance = seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100))
 
-predict <- predict(object= fit, newdata = new, type = 'state')
+#predict <- predict(object= fit, newdata = new, type = 'state')
 ```
 
 ```{r}
-x1 <- seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100)
-plot(y= predict(y), x= x1, ylab= 'Bobcat Occupancy Probability' , xlab= 'Disturbance Within 5km', type= 'l' )
+#x1 <- seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100)
+#plot(y= predict(y), x= x1, ylab= 'Bobcat Occupancy Probability' , xlab= 'Disturbance Within 5km', type= 'l' )
 ```
 
