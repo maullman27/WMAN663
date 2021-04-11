@@ -1,0 +1,60 @@
+---
+title: "Apparent Success of Captured Paddlefish"
+author: "MacKenzie Ullman"
+date: "4/09/2021"
+output:
+  word_document:
+    reference_docx: template1.docx
+---
+
+
+
+\newpage
+
+
+Introduction:
+
+|      The ultimate goal of this study is to research and evaluate the paddlefish populations in the Ohio River in West Virginia. It is the beginning of the development of a long-term monitoring program for the West Virginia Division of Natural Resources that will help evaluate their restoration efforts to reestablish paddlefish back into the waters of West Virginia. To evaluate paddlefish population status, paddlefish have been captured using hobbled gill nets to gather a representative sample of the fishes currently in the Ohio River. 
+
+
+Question: 
+What water conditions will lead to the most successful capture of paddlefish in a net?
+
+Objectives: 
+Predict the probability of capturing a paddlefish in a gill net in certain water conditions. 
+Estimate when paddlefish captures are most successful in gillnets.
+
+Hypothesis:
+The depth of the water where the gill net is set will be the most significant factor leading to successful paddlefish captures.  
+
+Methods: 
+
+|      From October through May, when water temperatures are low, paddlefish are captured using hobbled gill nets. The gill nets are 150 feet long, 30 feet tied down to 20 feet tall, and have 5 inch sized mesh squares.  At each site 2-4 of these hobbled gill nets are set in the water overnight, or less than 18 hours. The specific placement of each net at each site is determined by using a sonar unit to identify congregations of fish, avoid snags beneath the surface of the water, or to identify deep holes or pockets along the shore. Once a location has been deemed fit for setting the gill net, the net is anchored to the shore and brought out to block most of the channel. This is to allow safe passage of other vessels throughout the set time. The gill net is then anchored on the other end that continues upstream. The net forms a 150 feet “J” shape from the shore.  It is left in the water to soak overnight.  The following morning paddlefish are counted and released from each net.  
+Statistical Model.—The statistical model used for the response variable in this study was the Poisson regression model. The response variable for this study is the number of paddlefish captured per gill net. This means that y denotes counts of successful paddlefish captured per net (i). This is modeled as a Poisson random variable: yi ∼ Poisson(λi).  The models were fit within the program R. R used the glm() command to fit these models, which is used to model Generalized Linear Models .
+The number of paddlefish captured per gill net was modeled as a function with predictor variables of water temperature, conductivity, dissolved oxygen, pH, and depth at which the net was set. Water temperature was measured in degrees Celsius. Conductivity of water was measured in microsiemens per centimeter (µS/cm). Dissolved oxygen was measured in milligrams per Liter (mg/L). The depth of each net set was measured in feet. 
+
+Model Selection.—AIC model selection was used to evaluate the hypothesis that the depth of the water where the gill net is set will be the most significant factor leading to successful paddlefish captures. This method assumes that variables in the top model are those that most strongly influence the response of paddlefish counts per net. 
+
+Results: 
+
+Statistical Model. —This study included a sample size of 42 different gill net sets. Across these sets there is evidence that water conductivity, dissolved oxygen in water, and depth of the water where the net is set have significantly predict the counts of paddlefish per gillnet (P=0.000845, P=0.000201, P= 1.8e-11). The most significant predictor variable of paddlefish counts per gillnet was water depth at placement of the gill net. 
+
+Model selection. —According to the model AIC rankings, the most important determinant of paddlefish counts per gillnet was depth of net at set location. The log proportional change in expected count of paddlefish associated with a 1-unit change in depth is .1042. 
+
+
+\begin{table}[mods]
+\caption{Model Selection Based on AIC} 
+\centering 
+\begin{tabular}{c c c c c c c} 
+\hline\hline 
+Variable & K & AIC & Delta AIC & AIC Wt & Cummulative Wt & LL\\ [0.5ex] 
+\hline 
+Depth & 2 & 147.78 & 0.00 & 1 & 1 & -71.89\\ 
+Dissolved Oxygen & 2 & 178.17 & 30.39 & 0 & 1 & -87.09 \\
+Conductivity & 2 & 178.44 & 30.66 & 0 & 1 & -87.22\\
+pH & 2 & 186.19 & 38.41 & 0 & 1 & --91.09\\
+Temperature & 2 & 187.48 & 39.70 & 0 & 1 & -91.74 \\ [1ex] 
+\hline 
+\end{tabular}
+\end{table}
+
