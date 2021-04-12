@@ -1,0 +1,107 @@
+---
+title: "Homework 6"
+author: "MacKenzie Ullman"
+date: "4/9/2021"
+output: pdf_document
+---
+1. Load data and place into an unmarkedFramePCount object
+```{r}
+setwd("F:/Quant Eco")
+getwd()
+HW6 <- read.csv(file ='count.csv')
+head(HW6)
+summary(HW6)
+```
+```{r}
+library(unmarked)
+
+count_mat <- as.matrix(HW6)
+nmix_data <- unmarkedFramePCount(y = count_mat)
+```
+
+
+2. Fit an N-mixture model that assumes conditional detection probability is a function of the detection covariate provided, and expected abundance is an additive function of variables x1 and x2.
+```{r}
+#detection covariates
+p_covs <- read.csv('obs_covs.csv')
+head(p_covs)
+
+#Placing detection covariates in an unmarkedFramePCount object
+det_covs <- list(
+replicate = data.frame(p_covs[, c('j1', 'j2', 'j3')])
+)
+
+#Placing the list of detection covariates in to the unmarkedFramePCount object
+nmix_data <- unmarkedFramePCount(y = as.matrix(count_mat), obsCovs = det_covs) 
+
+fit <- pcount(formula = ~ replicate ~ 1, data = nmix_data, K = 100)
+```
+
+```{r}
+#site level covariates
+sitecovs <- read.csv('site_covs.csv')
+head(sitecovs)
+
+
+nmix_data <- unmarkedFramePCount(y = as.matrix(count_mat), siteCovs = sitecovs, obsCovs = det_covs) 
+
+fit <- pcount(~ replicate ~ x1 + x2,data = nmix_data, K = 100)
+summary(fit)
+```
+
+3. Interpret the effect of x1 on the expected count at each site. Verity your interpretation in R.
+The expected count per each site increases by 0.3696188 when x1 increases by 1 unit.
+```{r}
+#verify
+beta <- coef(fit)
+beta
+
+a <- beta[2]*1
+a
+
+b <- beta[2]*2
+b
+
+c <- b-a
+c
+```
+
+4. Predict and plot the effect of the supplied detection covariate. Do this over the range of this covariate.
+```{r}
+new <- data.frame(replicate = seq(from = min(det_covs$replicate), to = max(det_covs$replicate), length.out = 100))
+
+
+prd <- predict(object = fit, newdata = new, type = 'det')
+
+prd
+
+```
+
+```{r}
+plot(x = c(0,0), y = prd[1, c('lower', 'upper')],
+
+ylab = 'Detection probability', xlab = '',)
+
+```
+5. Use contrasts to compare expected abundance between all pairwise levels of variable x2. Obtain p-values associated with each contrast and tell me whether you reject or fail to reject each null hypothesis tested.
+```{r}
+x <- matrix(
+c(0, 0, 1, -1, 0,
+0, 0, 1, 0, -1,
+0, 0, 0, 1, -1),
+nrow = 3, byrow = T
+)
+x
+
+lin_com <- linearComb(obj = fit, coefficients = x, type = 'state')
+
+lin_com
+```
+```{r}
+w <- coef(lin_com) / SE(lin_com)
+w
+
+#Calculating p-values
+2 * pnorm(-1 * abs(w))
+```
+We reject all the null hypotheses. There is a difference between b and c, a difference between b and d, and a difference between c and d,  in terms of abundance probability
