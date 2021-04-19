@@ -1,0 +1,158 @@
+---
+title: "Homework 7"
+author: "MacKenzie Ullman"
+date: "4/13/2021"
+output: word_document
+---
+
+1. Load data and place into an unmarkedFrameOccu object
+```{r}
+setwd("F:/Quant Eco")
+getwd()
+HW7 <- read.csv(file ='Bobcat.csv')
+head(HW7)
+summary(HW7)
+```
+```{r}
+library(unmarked)
+bobcat_mat <- as.matrix(HW7)
+nmix_data <- unmarkedFramePCount(y = bobcat_mat)
+
+```
+
+```{r}
+#detection covariates
+p_covs <- read.csv('p covariates.csv')
+head(p_covs)
+
+class(p_covs)
+
+det_covs <- list(
+people = data.frame(p_covs[, c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71)])
+)
+
+nmix_data <- unmarkedFramePCount(y = as.matrix(bobcat_mat), obsCovs = det_covs)
+
+
+#site level covariates
+site_covs <- read.csv('psi covariates.csv')
+head(site_covs)
+
+class(site_covs)
+
+nmix_data <- unmarkedFramePCount(y = as.matrix(bobcat_mat), siteCovs = site_covs, obsCovs = det_covs)
+
+```
+
+
+2. Fit the following candidate set of models:
+```{r}
+library(unmarked)
+#intercept, intercept model
+fit1_p <- pcount(formula = ~ 1 ~ 1 , data = nmix_data, K = 100, mixture = "P")
+summary(fit1_p)
+
+#people, intercept
+fit2_p <- pcount(formula = ~ people ~ 1 , data = nmix_data, K = 100, mixture = "P")
+summary(fit2_p)
+
+#intercept, disturbance
+fit3_p <- pcount(formula = ~ 1 ~ Dist_5km , data = nmix_data, K = 100, mixture = "P")
+summary(fit3_p)
+
+# people disturbance
+fit4_p <- pcount(formula = ~ people ~ Dist_5km , data = nmix_data, K = 100, mixture = "P")
+summary(fit4_p)
+
+```
+
+```{r}
+#intercept, intercept model
+fit1_nb <- pcount(formula = ~ 1 ~ 1 , data = nmix_data, K = 100, mixture = "NB")
+summary(fit1_nb)
+
+#people, intercept
+fit2_nb <- pcount(formula = ~ people ~ 1 , data = nmix_data, K = 100, mixture = "NB")
+summary(fit2_nb)
+
+#intercept, disturbance
+fit3_nb <- pcount(formula = ~ 1 ~ Dist_5km , data = nmix_data, K = 100, mixture = "NB")
+summary(fit3_nb)
+
+# people disturbance
+fit4_nb <- pcount(formula = ~ people ~ Dist_5km , data = nmix_data, K = 100, mixture = "NB")
+summary(fit4_nb)
+```
+
+3.Perform model selection with AIC. What is your top model? How do you know? Is there model selection uncertainty?
+```{r}
+library(AICcmodavg)
+```
+```{r}
+cand.set <- list(
+P1 = fit1_p, P2 = fit2_p, P3 = fit3_p, P4 = fit4_p,
+NB1 = fit1_nb, NB2 = fit2_nb, NB3 = fit3_nb, NB4 = fit4_nb
+)
+
+mods <- aictab(cand.set = cand.set, second.ord = F)
+head(mods)
+```
+The top model is NB3 (fit3_nb <- pcount(formula = ~ 1 ~ Dist_5km , data = nmix_data, K = 100, mixture = "NB")). This is the top model because it is at the top of the tabla and it  has the lowest AIC score of 4405.99. There is a little uncertainty because the delta AIC of the second top model is less than 2. However there isnt much uncertainty because there is only  one other model with a delta AIC score less than 2 when compared to the top model Delta AIC, not multiple models with a delta AIC score less than 2. 
+
+
+4. Average both the effect of people on detection, and disturbance on occupancy, over all models. Report model-averaged slope coefficients and 95% confidence intervals.
+```{r}
+#effect of people on detection
+avg_people_1 <- modavgShrink(cand.set = cand.set,
+parm = 'people',
+second.ord = F,
+parm.type = 'detect')
+
+avg_people_1$Mod.avg.beta
+
+avg_people_1
+```
+The model averaged coefficient of people on detection is -0.02583
+The 95% confidence interval is -0.42, 0.36.
+
+```{r}
+#effect of disturbance on occupancy
+avg_disturbance_1 <- modavgShrink(cand.set = cand.set,
+parm = 'Dist_5km',
+second.ord = F,
+parm.type = 'lambda')
+
+avg_disturbance_1$Mod.avg.beta
+
+avg_disturbance_1
+```
+The model averaged slope coefficient of disturbance on occupancy is -27.66347
+The 95% confidence interval is -37.27, -18.06. 
+
+
+5. Obtain and plot model-averaged predictions of occupancy probability and detection probability. Average over all models, and make predictions over the observed range of each variable.
+```{r}
+# data.frame for new predictions
+new_dat <- data.frame(
+Dist_5km = seq(from = min(site_covs$Dist_5km), to = max(site_covs$Dist_5km), length.out = 100),
+people = seq(from = 1, to = 71, length.out = 100)
+)
+
+# calculating model averaged predictions
+#detection probability
+avg_prd <- modavgPred(cand.set = cand.set,
+newdata = new_dat,
+second.ord = F,
+parm.type = 'detect')
+avg_prd
+#occupancy probability
+avg_prd2 <- modavgPred(cand.set = cand.set,
+newdata = new_dat,
+second.ord = F,
+parm.type = 'lambda')
+avg_prd2
+
+
+```
+
+
