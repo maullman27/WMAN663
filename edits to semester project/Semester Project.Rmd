@@ -1,0 +1,156 @@
+---
+title: "Project"
+author: "MacKenzie Ullman"
+date: "4/7/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r}
+setwd("F:/Quant Eco/")
+getwd()
+Paddle <- read.csv(file= 'PDF Counts.csv')
+head(Paddle)
+summary(Paddle)
+```
+
+```{r}
+# Count of pdf captured as a function of water temperature
+fit1 <- glm(Count ~ Temp, family = poisson, data = Paddle)
+summary(fit1)
+```
+```{r}
+# Count of pdf captured as a function of water conductivity
+fit2 <- glm(Count ~ Conductivity, family = poisson, data = Paddle)
+summary(fit2)
+
+```
+```{r}
+# Count of pdf captured as a function of dissolved oxygen 
+fit3 <- glm(Count ~ DO, family = poisson, data = Paddle)
+summary(fit3)
+```
+```{r}
+# Count of pdf captured as a function of pH
+fit4 <- glm(Count ~ pH, family = poisson, data = Paddle)
+summary(fit4)
+```
+
+```{r}
+# Count of pdf captured as a function of depth of set
+fit5 <- glm(Count ~ Depth, family = poisson, data = Paddle)
+summary(fit5)
+```
+
+```{r}
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
+AIC(fit4)
+AIC(fit5)
+```
+
+```{r}
+
+
+library(AICcmodavg)
+```
+
+```{r}
+cand.set <- list(
+P1 = fit1, P2 = fit2, P3 = fit3, P4 = fit4,
+P5 = fit5
+)
+mods <- aictab(cand.set = cand.set, second.ord = F)
+head(mods)
+```
+
+```{r}
+#top model
+summary(fit5)
+```
+
+```{r}
+#extra models 
+# model with all 3 significant variables
+fit6 <- glm(Count ~ Conductivity + DO + Depth, family = poisson, data = Paddle)
+summary(fit6)
+# model with 2 significant variables
+fit7 <- glm(Count ~ Depth + DO, family = poisson, data = Paddle)
+summary(fit7)
+# model with other 2 significant variables
+fit8 <- glm(Count ~ DO + Conductivity, family = poisson, data = Paddle)
+summary(fit8)
+#model with other 2 significant variables
+fit9 <- glm(Count ~ Depth + Conductivity, family = poisson, data = Paddle)
+summary(fit9)
+```
+
+```{r}
+AIC(fit6)
+AIC(fit7)
+AIC(fit8)
+AIC(fit9)
+```
+```{r}
+cand.set2 <- list(
+P6 = fit6, P7 = fit7, P8 = fit8, P9 = fit9
+)
+mods2 <- aictab(cand.set = cand.set2, second.ord = F)
+head(mods2)
+```
+```{r}
+#top model 
+summary(fit7)
+```
+
+```{r}
+#all models
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
+AIC(fit4)
+AIC(fit5)
+AIC(fit6)
+AIC(fit7)
+AIC(fit8)
+AIC(fit9)
+
+cand.set3 <- list(
+P1 = fit1, P2 = fit2, P3 = fit3, P4 = fit4, P5= fit5, P6 = fit6, P7 = fit7, P8 = fit8, P9 = fit9
+)
+mods3 <- aictab(cand.set = cand.set3, second.ord = F)
+head(mods3)
+```
+
+
+```{r}
+# Confidence intervals
+# create data.frame of predicted values
+nd <- data.frame(
+Depth = seq(min(Paddle$Depth), max(Paddle$Depth)),
+DO = seq(min(Paddle$DO), max(Paddle$DO))
+)
+prd <- predict.glm(object = fit7, newdata = nd, type = 'link',se.fit = T)
+
+low <- exp(prd$fit - qnorm(0.975) * prd$se.fit)
+high <- exp(prd$fit + qnorm(0.975) * prd$se.fit)
+```
+
+```{r}
+#plot
+# plotting predicted values
+plot(y = exp(prd$fit), x = nd$Depth, type ='l')
+
+plot(y = exp(prd$fit), x = nd$DO + nd$Depth, type ='p')
+lines(x = nd$DO + nd$Depth, y = low, lty = 2)
+lines(x = nd$DO + nd$Depth, y = high, lty = 2)
+```
+```{r}
+#plot attempt 2
+ggplot2( prd, data= nd)
+```
+
