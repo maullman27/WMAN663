@@ -7,8 +7,8 @@ output: word_document
 
 1. Load data and place into an unmarkedFrameOccu object
 ```{r}
-setwd("F:/Quant Eco")
-getwd()
+# setwd("F:/Quant Eco")
+# getwd()
 HW7 <- read.csv(file ='Bobcat.csv')
 head(HW7)
 summary(HW7)
