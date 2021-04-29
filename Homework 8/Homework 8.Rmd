@@ -8,8 +8,8 @@ output: html_document
 Fit an N-mixture model that assumes abundance is a function of wetland size and type, and detection probability is a function of sky and time. 
 
 ```{r}
-setwd("F:/Quant Eco")
-getwd()
+#setwd("F:/Quant Eco")
+#getwd()
 HW8 <- read.csv(file ='sosp_nmix.csv')
 head(HW8)
 summary(HW8)
