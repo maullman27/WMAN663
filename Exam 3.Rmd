@@ -1,0 +1,169 @@
+---
+title: "Exam 3"
+author: "MacKenzie Ullman"
+date: "5/5/2021"
+output: html_document
+---
+
+1. Describe a sampling procedure that may have given rise to this dataset.
+
+
+2. Import data and fit an occupancy model that assumes detection probability is an additive function of
+obscovs1 and obscovs2; and that occupancy probability is an additive function of x1 and x2.
+```{r}
+setwd("C:/Users/mau0005/Downloads/")
+getwd()
+y <- read.csv(file='detect.csv')
+head(y)
+sitecovs <- read.csv(file = 'sitecovs.csv')
+obscovs1 <- read.csv(file = 'obscovs1.csv')
+obscovs2 <- read.csv(file = 'obscovs2.csv')
+
+detcovs <- list(
+obscovs1 = obscovs1,
+obscovs2 = obscovs2
+)
+
+library(unmarked)
+
+occu_data <- unmarkedFrameOccu(y = as.matrix(y),
+siteCovs = sitecovs,
+obsCovs = detcovs)
+
+fit1 <- occu(~ obscovs1 + obscovs2 ~ x1 + x2, occu_data)
+fit1
+```
+
+
+3. Use contrasts to determine if occupancy probability different when x1 = 2 vs. when x1 = -2?
+```{r}
+cm <- matrix(c(0, 2, 0,
+               0,-2,0),
+             nrow = 2, byrow = T)
+cnt <- linearComb(obj = fit1, coefficients = cm, type = 'state')
+pnorm(-1 * abs(coef(cnt) / SE(cnt))) * 2
+```
+The pvalue is greater than 0.05, so we fail to reject H0 at alpha of 0.05.
+
+
+4. Use model selection to compare the following 4 models. Which model is the "top" model? How do you
+know?
+```{r}
+fit2 <- occu(~ obscovs1 + obscovs2 ~ x1, occu_data)
+fit3 <- occu(~ obscovs1 + obscovs2 ~ x2, occu_data)
+fit4 <- occu(~ obscovs1 + obscovs2 ~ 1, occu_data)
+library(AICcmodavg)
+mod_list <- list(
+m1 = fit1, m2 = fit2, m3 = fit3, m4 = fit4
+)
+mods <- aictab(mod_list, second.ord = F)
+```
+The top model is model 3 because it has the smallest AIC. Although model 1 is a very close competitor. 
+
+
+5. Obtain model-averaged estimates of x1. What conclusions do you draw regarding this variable?
+
+```{r}
+w <- exp(-0.5 * mods$Delta_AIC) /
+sum(exp(-0.5 * mods$Delta_AIC))
+
+mods$Modnames
+
+bhat <- c(
+coef(fit3)[3], coef(fit1)[3], coef(fit4)[3],
+coef(fit2)[3]
+)
+
+avg_type <- sum(w * bhat)
+avg_type
+```
+```{r}
+#modavgShrink(mod_list,'x1', second.ord = T, parm.type ='lambda')
+```
+
+
+
+6. Plot model-averaged predictions of how detection probability changes across the observed range of
+obscovs2.
+```{r}
+newdat <- data.frame(
+obscovs2 = seq(min(detcovs$obscovs2), max(detcovs$obscovs2), length.out = 100),
+obscovs1 = rep(0, 100)
+)
+obscovs2_prd <- modavgPred(mod_list, newdata = newdat, second.ord = T, parm.type = 'detect')
+
+plot(x = newdat$obscovs2, y = obscovs2_prd$mod.avg.pred, type = 'l',
+ylim = c(min(obscovs2_prd$lower.CL), max(obscovs2_prd$upper.CL)))
+lines(x = newdat$obscovs2, y = obscovs2_prd$lower.CL, lty = 2)
+lines(x = newdat$obscovs2, y = obscovs2_prd$upper.CL, lty = 2)
+```
+
+
+
+
+7. Evaluate the fit of the top model using the sum of squared Pearson’s residuals as a test statistic.
+```{r}
+chisq <- function(fit3){ # mod is fitted model
+obs <- getY(fit3@data) # observed
+ex <- fitted(fit3) # expected
+ts <- (ex - obs) ^ 2 / # chi-square statistic
+(ex * (1 - ex))
+return(sum(ts))
+}
+chisq(fit3)
+```
+
+
+
+8. What is the closure assumption? What are the consequences of violating the closure assumption? Tell
+me why violating the closure assumption results in these consequences.
+
+In an occupancy model, the closure assumption is when we assume that a species is present or absent across all replicate surveys. In an N-Mixture model, the closure assumption  is when we assume that the number of individuals is constant across all replicate surveys. The consequence of violating the closure assumption, in occupancy models and N-Mixture models, is that it leads to underestimation of detection probability and overestimation of abundance. Violating closure results in these consequences because when we violate closure because we make imperfect detection of species when we survey which leads us to underestimate numbers that are actually there. This then leads to an overestimation of how many individuals are actually present. 
+
+
+9. Assume you have variable p that is bounded between 0 and 1. Further, assume p = 0.25. What link
+function would you use to transform p to the real number line? What is the analogous vale of p = 0.25
+on the real number line?
+you could use the logit link function
+```{r}
+log(0.25 / (1 - 0.25))
+
+```
+
+10. Assume you have a random variable that can only obtain values of 0, 1, 2, ..., ∞. What probability
+distribution might you use to model such data? What is (are) the parameter(s) of this probability
+distribution? What link function might you use if you wanted to model that parameter as a linear
+function of variables?
+I would use a binomial distribution to model the data. The parameters are N - number of trials, and p -probability of success in each trial. I would use a logit link function to model the p parameter because p is bounded between 0 and 1. 
+
+11. Discuss null hypothesis significance testing within the context of model checking. Be sure to include
+the following phrases in your description:
+• assumptions of the null hypothesis
+• test statistic
+• p-value
+• reject or fail to reject the null hypothesis
+
+In model checking the null hypothesis is that the fitted model is the data generating model. To do test this we first fit a model and we identify a test statistic from this model. Then we simulate new data. The assumptions for the null hypothesis here are that coefficients from the fitted model are the data generating coefficients. Next we calculate 
+the same test statistic calculated from observed data but with the new simulated data. We repeat the simulation process many times until finally we compare the distribution of simulated test statistics with those calculated from observed data. Now we can obtain a p-value from the simulated distribution.If the pvalue is less than 0.05 we reject the null hypothesis. If the pvalue is greater than 0.05 we fail to reject the null hypothesis. 
+
+12. interpret the coefficient β1
+β1 is the difference between levels ‘b’ and levels ‘a’ when predictor variable x3 = 0.
+
+
+
+13. how does the response variable change in response to a 1-unit change in x2?
+
+The response variable changes β2 units for every 1-unit increase in x2
+
+
+
+
+
+
+
+
+
+
+
+
+
