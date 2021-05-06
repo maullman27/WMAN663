@@ -11,8 +11,8 @@ output: html_document
 2. Import data and fit an occupancy model that assumes detection probability is an additive function of
 obscovs1 and obscovs2; and that occupancy probability is an additive function of x1 and x2.
 ```{r}
-setwd("C:/Users/mau0005/Downloads/")
-getwd()
+#setwd("C:/Users/mau0005/Downloads/")
+#getwd()
 y <- read.csv(file='detect.csv')
 head(y)
 sitecovs <- read.csv(file = 'sitecovs.csv')
